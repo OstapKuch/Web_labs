@@ -67,10 +67,9 @@ function add_news() {
   var title = document.getElementById("title").value;
   var news = document.getElementById("news").value;
   var bool = true;
-  var location = window.location.pathname
-  var trimmedString = location.substring(0, location.length-10);
-
-  if(document.getElementById("image").src == ("file://"+trimmedString+"images/img_empty.png")) {
+  var location = document.getElementById("image").src
+  var trimmedString = location.substring(location.length-20, location.length);
+  if( trimmedString == "images/img_empty.png") {
     alert("Please add image");
     bool = false;
   }
