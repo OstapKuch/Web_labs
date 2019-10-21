@@ -1,0 +1,14 @@
+CACHE MANIFEST
+CACHE:
+index.html
+templates/news.html
+css/style.css
+css/bootstrap.min.css
+images/band_img.jpg
+images/news/img_1.png
+images/news/img_1.png
+NETWORK:
+*
+
+FALLBACK:
+templates/admin.html
