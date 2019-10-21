@@ -69,7 +69,6 @@ function add_news() {
   var bool = true;
   var location = document.getElementById("image").src
   var trimmedString = location.substring(location.length-20, location.length);
-  alert(trimmedString);
   if( trimmedString == "images/img_empty.png") {
     alert("Please add image");
     bool = false;
