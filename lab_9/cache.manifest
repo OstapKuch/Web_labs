@@ -1,0 +1,9 @@
+CACHE MANIFEST
+CACHE:
+/index.html
+/news.html
+/tour_schedule.html
+NETWORK:
+*
+FALLBACK:
+/ /error.html
