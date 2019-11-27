@@ -1,55 +1,10 @@
-useLocalStorage = false;
 
-function connectDB(f) {
-    var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    let request = indexedDB.open("mydb", 1);
-    request.onerror = function(err) {
-        console.log(err);
-    };
-    request.onsuccess = function() {
-        f(request.result);
-    }
-    request.onupgradeneeded = function(e) {
-        e.currentTarget.result.createObjectStore("fans_appeals", {
-            keyPath: "id",
-            autoIncrement: true
-        });
-        e.currentTarget.result.createObjectStore("news", {
-            keyPath: "id",
-            autoIncrement: true
-        });
-    }
-}
 
-function logerr(err) {
-    console.log(err);
-}
-
-function saveToIndexedDB(object, storageName) {
-    connectDB(function(db) {
-        console.log(object);
-        var request = db.transaction([storageName], "readwrite").objectStore(storageName).put(object);
-
-        request.onerror = logerr;
-        request.onsuccess = function() {
-            console.log(request.result);
-        }
-    });
-
-}
-
-function clearDB() {
-    var request = indexedDB.deleteDatabase("mydb");
-    request.onerror = logerr;
-    request.onsuccess = function() {
-        console.log("Deleated DB")
-    }
-}
 
 function getAppeals(storeName) {
-    connectDB(function(db) {
+    object.connectDB(function(db) {
         var request = db.transaction(storeName).objectStore(storeName).getAll();
-        request.onerror = logerr;
+        request.onerror = object.logerr;
         request.onsuccess = function() {
             console.log(request.result);
             addAppealOnPage(request.result);
@@ -85,11 +40,11 @@ function createAppeal() {
         if (useLocalStorage) {
 
             var serialNewAppeal = JSON.stringify(Appeal);
-            saveToLocalStorage(serialNewAppeal, "fans_appeals");
+            object.saveToLocalStorage(serialNewAppeal, "fans_appeals");
 
         } else {
 
-            saveToIndexedDB(Appeal, "fans_appeals");
+            object.saveToIndexedDB(Appeal, "fans_appeals");
 
         }
 
@@ -102,7 +57,7 @@ function createAppeal() {
 
 function addAppealOnPage(existingAppeals) {
     if (useLocalStorage) {
-        existingAppeals = getExistingFromLocalStorage("fans_appeals");
+        existingAppeals = object.getExistingFromLocalStorage("fans_appeals");
 
     }
 
@@ -207,11 +162,11 @@ function add_news() {
             if (useLocalStorage) {
 
                 var serialNewNews = JSON.stringify(News);
-                saveToLocalStorage(serialNewNews, "news");
+                object.saveToLocalStorage(serialNewNews, "news");
 
             } else {
 
-                saveToIndexedDB(News, "news");
+                object.saveToIndexedDB(News, "news");
 
             }
 
@@ -229,7 +184,7 @@ function add_news() {
 
 function addNewsOnPage(existingNews) {
     if (useLocalStorage) {
-        existingNews = getExistingFromLocalStorage("news");
+        existingNews = object.getExistingFromLocalStorage("news");
     }
     for (news in existingNews) {
         if (useLocalStorage) {
@@ -275,9 +230,9 @@ function addNewsOnPage(existingNews) {
 }
 
 function getNews(storeName) {
-    connectDB(function(db) {
+    object.connectDB(function(db) {
         var request = db.transaction(storeName).objectStore(storeName).getAll();
-        request.onerror = logerr;
+        request.onerror = object.logerr;
         request.onsuccess = function() {
             console.log(request.result);
             addNewsOnPage(request.result);
@@ -289,26 +244,6 @@ function getNews(storeName) {
 // --------------------  localStorage- --------------------
 // --------------------------------------------------------
 
-function saveToLocalStorage(object, key) {
-
-
-    var existingObjects = getExistingFromLocalStorage(key);
-    existingObjects.push(object);
-    existingObjects = JSON.stringify(existingObjects);
-    localStorage.setItem(key, existingObjects);
-
-};
-
-function getExistingFromLocalStorage(key) {
-
-    var existingObjects = localStorage.getItem(key);
-    existingObjects = JSON.parse(existingObjects);
-    if (existingObjects === null) {
-        existingObjects = [];
-    }
-    return existingObjects;
-
-};
 
 // --------------------------------------------------------
 // ---------------  Additional functions ------------------
@@ -335,7 +270,7 @@ function handleConnectionChange(event) {
         alert("Connection established");
         getAppeals("fans_appeals");
         getNews("news");
-        clearDB();
+        object.clearDB();
         localStorage.removeItem('fans_appeals');
         localStorage.removeItem('news');
 
