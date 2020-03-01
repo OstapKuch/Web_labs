@@ -1,6 +1,6 @@
 # Web_labs
 
-# Instractions to run lab 10 on Linux
+# Instructions to run lab 10 on Linux
 
 1. Installing Node.js and needed packages.
 
